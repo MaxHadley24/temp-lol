@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">  
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+  
+    <title>My Menu</title>
+    <style>
+      /* Set the font size and family for the whole document */
+      body h1{
+        text-align: center;
+        font-size: 48pt;
+        margin: 20px;
+        padding: 10px;
+        margin-left: 10%;
+        margin-right: 10%;
+        background-color: #dc3545;
+      }
+
+      body {
+        background-color: #198754;
+      }
+      
+      /* Style the table element */
+      table {
+        width: 100%; /* Make the table span the full width of its container */
+        border-collapse: collapse; /* Collapse the borders between cells */
+        margin-bottom: 1em; /* Add some margin below the table */
+      }
+      
+      /* Style the table header */
+      th {
+        background-color: #0074D9; /* Set a blue background color */
+        color: white; /* Set a white text color */
+        font-weight: bold; /* Make the text bold */
+        text-align: left; /* Align the text to the left */
+        padding: 0.5em 1em; /* Add some padding to the cells */
+      }
+      
+      /* Style the table body */
+      td {
+        border: 1px solid #ddd; /* Add a 1px gray border around the cells */
+        padding: 0.5em 1em; /* Add some padding to the cells */
+      }
+      
+      /* Alternate row background color */
+      tr:nth-child(even) {
+        background-color: #f2f2f2; /* Set a light gray background color for even rows */
+      }
+      
+      /* Style the button */
+      button {
+        background-color: #0074D9; /* Set a blue background color */
+        color: white; /* Set a white text color */
+        font-size: 1em; /* Set the font size */
+        padding: 0.5em 1em; /* Add some padding to the button */
+        border: none; /* Remove the border */
+        cursor: pointer; /* Change the cursor to a pointer */
+      }
+
+      footer {
+      text-align: center;
+      position: fixed;
+      justify-content: space-between;
+      font-size: 24;
+      color: aliceblue;
+      bottom: 0;
+      left: 0;
+      height: 90px;
+      background-color: #dc3546d7;
+      width: 100%;
+      }
+
+      footer #result{
+        padding-top: 20px;
+      }
+
+      .CartButton{
+        position: fixed;
+        align-self: last baseline;
+        width: 80px;
+        height: 60px;
+        margin-left: 15px;
+        border-radius: 10px;
+        text-align:center;
+      }
+
+      .CartButton a{
+        text-decoration: none;
+        color:black;
+      }
+
+      #result{
+        font-size: xx-large;
+      }
+
+      #overlay {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        
+        right: 0;
+        
+        background-color: rgba(0,0,0,0.7);
+        z-index: 2;
+        cursor: pointer;
+      }
+
+      #cart {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        right: 0;
+        background-color: rgba(0,0,0,0.7);
+        z-index: 2;
+        cursor: pointer;
+      }
+
+      #text{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        color: white;
+        transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+      }
+
+      .container{
+        margin-top: 20px;
+        padding-bottom: 60px;
+        }
+        
+      
+      .Sauce{
+        background-color: #ffc107;
+        width: 30%;
+        margin: 2.5%;
+        padding-bottom: 70px;
+      }
+
+      .dropdown{
+        margin-right: 300px;
+      }
+
+      .Topping{
+        background-color: #ffc107;
+        width: 30%;
+        margin: 2.5%;
+        padding-bottom: 70px;
+        position: relative;
+      }
+    </style>
+
+    
+  </head>
+    <div class="CartButton">
+      <h5><button onclick="showCart()">Cart</button></h5>
+    </div>
+    <div id="cartContainer"></div>
+    
+  <body>
+    <h1>Menu</h1>
+
+    <script>
+      var cart = []; //initialize an empty cart array
+
+      function addToCart(item) {
+        cart.push(item); //add item to the cart array
+      }
+
+
+      function clickCounter(value) {
+        if (typeof(Storage) !== "undefined") {
+          if (localStorage.clickcount) {
+            localStorage.clickcount = Number(localStorage.clickcount) + value;
+          } else {
+            localStorage.clickcount = 0;
+          }
+          document.getElementById("result").innerHTML = "Total: $ " + parseFloat((localStorage.clickcount)).toFixed(2);
+        } else {
+          document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
+        }
+      }
+
+      function reset() {
+        while (cart.length>0){
+          cart.pop();
+        }
+        
+
+        if (typeof(Storage) !== "undefined") {
+          if (localStorage.clickcount) {
+            localStorage.clickcount = 0;
+          }
+          document.getElementById("result").innerHTML = "Total: $ " + localStorage.clickcount;
+        } else {
+          document.getElementById("result").innerHTML = "Sorry, your browser does not support web storage...";
+        }
+      }
+
+      function on() {
+        document.getElementById("overlay").style.display = "block";
+      }
+
+      function showCart() {
+        document.getElementById("cart").style.display = "block";
+      }
+
+      function off() {
+        document.getElementById("overlay").style.display = "none";
+      }
+
+      function closeCart() {
+        document.getElementById("cart").style.display = "none";
+      }
+
+    </script>
+
+    <table>
+      <!-- Define the table header -->
+      <thead>
+        <tr>
+          <th>Item ID</th>
+          <th>Item Name</th>
+          <th>Item Price</th>
+          <th></th> <!-- Add a new column for the button -->
+        </tr>
+      </thead>
+      
+      <!-- Define the table body -->
+      <tbody>
+        <!-- Loop over each item in the menu array -->
+        <% menu.forEach((item, index) => { %>
+          <!-- Define a table row for the current item -->
+          <tr style="background-color: <%= index % 2 === 0 ? '#ffffff' : '#f2f2f2' %>;">
+            <!-- Display the item ID in a table cell -->
+            <td><%= item.item_id %></td>
+            <!-- Display the item name in a table cell -->
+            <td><%= item.item_name %></td>
+            <!-- Display the item price in a table cell -->
+            <td><%= item.item_price %></td>
+            <!-- Define a button for the current item -->
+            <% if (item.item_name ===  "1-Topping Pizza" || item.item_name === "Build Your Own Pizza") { %>
+              <td><button onclick="on()">Customize</button></td>
+            <% } else { %>
+              <td><button class="button" onclick="clickCounter(Number(<%= item.item_price %>));addToCart(Number(<%= item.item_id %>))">Add to Cart</button></td>
+            <% }; %>
+          </tr>
+        <% }); %>
+
+        <div id="overlay">
+
+          <div class="container">
+            <div class="row">
+                <section class="Sauce">
+                    <h1>Select Sauce</h1>
+                    <div class="col-sm-4">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Sauce
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                              <button class="dropdown-item" type="button">Sauce 1</button>
+                              <button class="dropdown-item" type="button">Sauce 2</button>
+                              <button class="dropdown-item" type="button">Sauce 3</button>
+                            </div>
+                        </div>            
+                    </div>
+                </section>
+                
+                <section class="Topping">
+                    <h1>Select Topping</h1>
+                <div class="col-sm-4">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Sauce
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                          <button class="dropdown-item" type="button">Topping 1</button>
+                          <button class="dropdown-item" type="button">Topping 2</button>
+                          <button class="dropdown-item" type="button">Topping 3</button>
+                        </div>
+                    </div>            
+                </div>
+                </section>
+            </div>
+
+        </div>
+
+          <button onclick="clickCounter(8.85);off();addToCart(3);">Add to Cart</button>
+        </div>
+
+      </tbody>
+    </table>
+    <!-- Define a table element to display the menu -->
+    
+    <p><button onclick="reset()" type="button">Cancell Order!</button></p>
+
+    
+    <div id="cart">  
+      <table>
+      <!-- Define the table header -->
+      <thead>
+        <tr>
+          <th>Item ID</th>
+          <th>Item Name</th>
+          <th>Item Price</th>
+          <th></th> <!-- Add a new column for the button -->
+        </tr>
+      </thead>  
+
+      <tbody>
+        
+      </tbody>
+      </table>
+      <button onclick="closeCart()">Order More</button>
+    </div>
+
+  </body>
+
+  <footer>
+    <div id="result">Total: $ 0</div>
+  </footer>
+</html>

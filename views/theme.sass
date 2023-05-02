@@ -1,0 +1,12 @@
+@import "functions"; // required
+@import "variables"; // required to get $orange variable
+
+$primary: $orange; // set the $primary variable
+
+// merge with existing $theme-colors map
+$theme-colors: map-merge($theme-colors, (
+  "primary": $primary
+));
+
+// set changes
+@import "bootstrap";
